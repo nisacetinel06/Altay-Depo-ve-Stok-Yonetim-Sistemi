@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ürün Güncelleme</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #FF6F00;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .logo {
+        width: 150px;
+        height: auto;
+        border-radius: 50%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border: 3px solid #FF4500;
+        object-fit: cover;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .login-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        width: 320px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+    .login-container h2 {
+        color: #FF4500;
+        font-size: 24px;
+        margin-top: 140px;
+        margin-bottom: 20px;
+    }
+    .login-container input[type="text"],
+    .login-container input[type="number"],
+    .login-container input[type="double"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin: 10px 0;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+    }
+    .login-container input[type="text"]:focus,
+    .login-container input[type="number"]:focus,
+    .login-container input[type="double"]:focus {
+        border-color: #FF4500;
+        outline: none;
+    }
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .button-container button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        background-color: #FF4500;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .button-container button:hover {
+        background-color: #FF6347;
+    }
+    .button-container a {
+        text-decoration: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        background-color: #A9A9A9;
+        color: black;
+    }
+    .button-container a:hover {
+        background-color: #888888;
+    }
+  </style>
+</head>
+<body>
+<div class="login-container">
+  <img src="altay.webp" alt="Logo" class="logo">
+  <h2>Ürün Güncelleme</h2>
+  <form id="urunGuncelleForm" method="PUT">
+    <input type="number" id="urun_id" name="urun_id" placeholder="Ürün ID" required>
+    <input type="text" id="urun_adi" name="urun_adi" placeholder="Ürün Adı" required>
+    <input type="number" id="stok_miktari" name="stok_miktari" placeholder="Stok Miktarı" required>
+    <input type="double" id="fiyat" name="fiyat" placeholder="Fiyat" required>
+    <input type="number" id="kategori_id" name="kategori_id" placeholder="Kategori ID" required>
+    <div class="button-container">
+      <a href="AnaSayfa.html" class="back-button">Geri</a>
+      <button id="guncelleButonu" type="submit">Güncelle</button>
+    </div>
+  </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $('#urunGuncelleForm').on('submit', function (event) {
+      event.preventDefault();
+
+      let urunId = $("#urun_id").val();
+      let urunAdi = $("#urun_adi").val();
+      let stokMiktari = $("#stok_miktari").val();
+      let fiyat = $("#fiyat").val();
+      let kategoriId = $("#kategori_id").val();
+
+      let guncelleUrun = {
+          urun_id: parseInt(urunId),
+          urun_adi: urunAdi,
+          stok_miktari: parseInt(stokMiktari),
+          fiyat: parseFloat(fiyat),
+          kategori_id: parseInt(kategoriId)
+      };
+
+      $.ajax({
+          url: "http://localhost:8090/PUT/UrunPut",
+          type: "PUT",
+          contentType: "application/json",
+          data: JSON.stringify(guncelleUrun),
+          success: function (response) {
+              alert(response.message);
+             window.location.href = "UrunKategorisi.html";
+          },
+          error: function (xhr) {
+              alert("Ürün güncellenemedi: " + xhr.responseJSON.message);
+          }
+      });
+  });
+</script>
+</body>
+</html>

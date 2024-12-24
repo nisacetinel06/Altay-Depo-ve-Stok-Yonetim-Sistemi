@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ürün ve Kategoriler</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Genel Sayfa Stil */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        /* Kategori Menü Stil */
+        #header-menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #FF6F00;
+            padding: 15px 20px;
+        }
+
+        #header-menu button {
+            background-color: white;
+            color: #FF6F00;
+            border: 2px solid #FF6F00;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        #header-menu button:hover {
+            background-color: #FF6F00;
+            color: white;
+        }
+
+        #category-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        #category-list li {
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #category-list li:hover {
+            text-decoration: underline;
+        }
+
+        /* Ürünler Tablosu Stil */
+        #product-list-container {
+            margin: 20px auto;
+            width: 90%;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            max-height: 70vh;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 28px;
+            color: #FF6F00;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #FF6F00;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f0f0f0;
+        }
+
+        tr:hover {
+            background-color: #e0e0e0;
+            cursor: pointer;
+        }
+
+        /* Aksiyon Butonları */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .action-buttons button {
+            background-color: #FF6F00;
+            color: white;
+            border: none;
+            padding: 8px 10px;
+            margin: 5px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .action-buttons button i {
+            margin-right: 5px;
+        }
+
+        .action-buttons button:hover {
+            background-color: #e65c00;
+        }
+
+        .action-buttons button i.fa-trash {
+            font-size: 18px;
+        }
+
+        .action-buttons button i.fa-pencil {
+            font-size: 18px;
+        }
+
+        /* Alt butonlar */
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .footer-buttons button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .footer-buttons .geri-button {
+            background-color: #808080; /* Gri renk */
+            color: white;
+        }
+
+        .footer-buttons .geri-button:hover {
+            background-color: #666666;
+        }
+
+        .footer-buttons .calisan-ekle-button {
+            background-color: #FF4500;
+            color: white;
+        }
+
+        .footer-buttons .calisan-ekle-button:hover {
+            background-color: #e65c00;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Kategoriler ve Kontroller -->
+<div id="header-menu">
+    <div>
+        <button onclick="window.location.href='Anasayfa.html'">← Geri</button>
+        <button onclick="window.location.href='UrunEkle.html'">+ Ürün Ekle</button>
+    </div>
+    <ul id="category-list">
+        <!-- Kategoriler buraya eklenecek -->
+    </ul>
+</div>
+
+<!-- Ürünler Tablosu -->
+<div id="product-list-container">
+    <h2>ÜRÜNLER</h2>
+    <table id="product-list">
+        <thead>
+        <tr>
+            <th>Ürün ID</th>
+            <th>Ürün Adı</th>
+            <th>Stok Miktarı</th>
+            <th>Fiyat</th>
+            <th>İşlem</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Ürünler buraya eklenecek -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+    fetch("http://localhost:8090/GET/UrunKategorisiGet")
+        .then(response => response.json())
+        .then(data => {
+            const categoryList = document.getElementById("category-list");
+            data.forEach(category => {
+                let categoryItem = document.createElement("li");
+                categoryItem.textContent = category.kategori_adi;
+                categoryList.appendChild(categoryItem);
+            });
+        })
+        .catch(error => console.error("Hata oluştu:", error));
+
+    window.onload = function () {
+        fetch("http://localhost:8090/GET/UrunGet")
+            .then(response => response.json())
+            .then(data => {
+                const productList = document.getElementById("product-list").getElementsByTagName("tbody")[0];
+                productList.innerHTML = ""; // Önceki ürünleri temizle
+                if (data.length > 0) {
+                    data.forEach(product => {
+                        let row = productList.insertRow();
+                        row.innerHTML = `
+                          <td>${product.urun_id}</td>
+                          <td>${product.urun_adi}</td>
+                          <td>${product.stok_miktari}</td>
+                          <td>${product.fiyat} TL</td>
+                          <td>
+                            <div class="action-buttons">
+                              <button onclick="editProduct(${product.urun_id})"><i class="fa fa-pencil"></i></button>
+                              <button onclick="deleteProduct(${product.urun_id})"><i class="fa fa-trash"></i></button>
+                            </div>
+                          </td>
+                        `;
+                    });
+                } else {
+                    let row = productList.insertRow();
+                    row.innerHTML = "<td colspan='5'>Hiç ürün bulunmamaktadır.</td>";
+                }
+            })
+            .catch(error => console.error("Hata oluştu:", error));
+    };
+
+    // Ürün güncelleme işlevi
+    function editProduct(urun_id) {
+        window.location.href = `UrunGuncelle.html?urun_id=${urun_id}`;
+    }
+
+    // Ürün silme işlevi
+    function deleteProduct(urun_id) {
+        fetch("http://localhost:8090/DELETE/UrunDelete", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ "urun_id": urun_id })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert("Ürün başarıyla silindi.");
+                window.location.reload();
+            } else {
+                alert("Ürün silinemedi: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Hata oluştu:", error);
+            alert("Bir hata oluştu.");
+        });
+    }
+</script>
+
+</body>
+</html>

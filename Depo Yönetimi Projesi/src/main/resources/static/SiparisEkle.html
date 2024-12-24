@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sipariş Ekle</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #FF6F00;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        width: 320px;
+        text-align: center;
+    }
+    .form-container h2 {
+        color: #FF4500;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    .form-container input[type="number"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin: 10px 0;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+        transition: border-color 0.3s ease;
+    }
+    .form-container input[type="number"]:focus {
+        border-color: #FF4500;
+        outline: none;
+    }
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .button-container button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        background-color: #FF4500;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .button-container button:hover {
+        background-color: #FF6347;
+    }
+    .button-container a {
+        text-decoration: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        background-color: #A9A9A9;
+        color: black;
+    }
+    .button-container a:hover {
+        background-color: #888888;
+    }
+  </style>
+</head>
+<body>
+<div class="form-container">
+  <h2>Sipariş Ekle</h2>
+  <form id="siparisForm" method="POST">
+    <input type="number" id="siparis_id" name="siparis_id" placeholder="Sipariş ID" required>
+    <input type="number" id="urun_id" name="urun_id" placeholder="Ürün ID" required>
+    <input type="number" id="miktar" name="miktar" placeholder="Miktar" required>
+    <div class="button-container">
+      <a href="AnaSayfa.html" class="back-button">Geri</a>
+      <button id="kaydetButonu" type="submit">Kaydet</button>
+    </div>
+  </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $('#siparisForm').on('submit', function (event) {
+      event.preventDefault();
+
+      let siparisId = $("#siparis_id").val();
+      let urunId = $("#urun_id").val();
+      let miktar = $("#miktar").val();
+
+      console.log('Sipariş ID:', siparisId);
+      console.log('Ürün ID:', urunId);
+      console.log('Miktar:', miktar);
+
+      let siparis = {
+          siparis_id: siparisId,
+          urun_id: urunId,
+          miktar: miktar
+      };
+
+      $.ajax({
+          url: "http://localhost:8090/POST/SiparisUrunPost",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify(siparis),
+          success: function (response, textStatus, xhr) {
+              console.log('Sunucu Yanıtı:', response);
+              if (xhr.status === 200) {
+                  alert(response.message);
+                  window.location.href = 'SiparisTablosu.html';
+
+              } else {
+                  alert("Bir hata oluştu, lütfen tekrar deneyin.");
+              }
+          },
+          error: function (xhr, status, error) {
+              console.error("Hata Detayları:", status, error);
+              alert("Sipariş kaydı yapılamadı. Lütfen tekrar deneyin.");
+          }
+      });
+  });
+</script>
+</body>
+</html>

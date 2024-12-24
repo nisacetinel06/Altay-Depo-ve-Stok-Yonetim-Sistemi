@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Çalışanlar Listesi</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Genel Sayfa Stil */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #FF6F00; /* Arka plan rengi turuncu */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 900px;
+  text-align: center;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%; /* Yüksekliği %100 yapıyoruz ki içerik tam olarak yerleşsin */
+}
+
+.logo {
+  width: 150px;
+  height: auto;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 3px solid #FF4500; /* Logo etrafında turuncu çerçeve */
+  object-fit: cover;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%); /* Ortalamak için */
+}
+
+h1 {
+  text-align: center;
+  color: #FF4500; /* Turuncu renk */
+  font-size: 42px;
+  margin-top: 160px;
+  margin-bottom: 30px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Tablo tasarımı */
+table {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+th {
+  background-color: white;
+  color: #FF6F00;
+  text-transform: uppercase;
+}
+
+td {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+tr:nth-child(even) td {
+  background-color: #e0e0e0;
+}
+
+tr:hover {
+  background-color: #d3d3d3;
+  cursor: pointer;
+}
+
+/* Kaydırılabilir Tablo */
+.table-container {
+  width: 100%;
+  max-height: 400px; /* Tablo yüksekliği */
+  overflow-y: auto;  /* Yalnızca dikey kaydırma */
+  margin-top: 20px;
+}
+
+/* Aksiyon butonları için stil */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-buttons button {
+  background-color: #FF6F00;
+  color: white;
+  border: none;
+  padding: 8px 10px;
+  margin: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.action-buttons button i {
+  margin-right: 5px;
+}
+
+.action-buttons button:hover {
+  background-color: #e65c00;
+}
+
+.action-buttons button i.fa-trash {
+  font-size: 18px;
+}
+
+.action-buttons button i.fa-pencil {
+  font-size: 18px;
+}
+
+/* Alt butonlar */
+.footer-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.footer-buttons button {
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+.footer-buttons .geri-button {
+  background-color: #808080; /* Gri renk */
+  color: white;
+}
+
+.footer-buttons .geri-button:hover {
+  background-color: #666666;
+}
+
+.footer-buttons .calisan-ekle-button {
+  background-color: #FF4500;
+  color: white;
+}
+
+.footer-buttons .calisan-ekle-button:hover {
+  background-color: #e65c00;
+}
+
+  </style>
+</head>
+<body>
+<div class="container">
+  <img src="altay.webp" alt="Logo" class="logo"> <!-- Logo ekledim -->
+  <h1>Çalışanlar</h1>
+
+  <!-- Kaydırılabilir Tablo -->
+  <div class="table-container">
+    <table id="calisanlarTable">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Ad</th>
+        <th>Pozisyon</th>
+        <th>Depo ID</th>
+        <th>İşlem</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Veriler buraya eklenecek -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Alt Butonlar -->
+  <div class="footer-buttons">
+    <button class="geri-button" onclick="window.location.href='AnaSayfa.html';">Geri</button>
+    <button class="calisan-ekle-button" onclick="window.location.href='CalisanEkle.html';">Çalışan Ekle</button>
+  </div>
+
+</div>
+
+<script>
+  // Çalışanlar listesini çeken işlev
+  function fetchCalisanlar() {
+    fetch("http://localhost:8090/GET/CalisanGet")
+      .then(response => response.json())
+      .then(data => {
+        const calisanlarTable = document.getElementById('calisanlarTable').getElementsByTagName('tbody')[0];
+        calisanlarTable.innerHTML = ''; // Tabloyu temizle
+
+        data.forEach(calisan => {
+          const row = calisanlarTable.insertRow();
+          row.insertCell(0).innerText = calisan.calisan_id || 'N/A';  // calisan_id kontrolü
+          row.insertCell(1).innerText = calisan.calisan_adi || 'N/A'; // calisan_adi kontrolü
+          row.insertCell(2).innerText = calisan.pozisyon || 'N/A';   // pozisyon kontrolü
+          row.insertCell(3).innerText = calisan.depo_id || 'N/A';     // depo_id kontrolü
+
+          const actionCell = row.insertCell(4);
+          actionCell.classList.add('action-buttons');
+
+          // Güncelleme butonu (kalem simgesiyle)
+          const updateButton = document.createElement('button');
+          updateButton.classList.add('action-button');
+          updateButton.innerHTML = '<i class="fa fa-pencil"></i>'; // Kalem simgesi ve metin
+          updateButton.onclick = () => updateCalisan(calisan.calisan_id);
+          actionCell.appendChild(updateButton);
+
+          // Silme butonu (çöp kutusu simgesiyle)
+          const deleteButton = document.createElement('button');
+          deleteButton.classList.add('action-button');
+          deleteButton.innerHTML = '<i class="fa fa-trash"></i>'; // Çöp kutusu simgesi ve metin
+          deleteButton.onclick = () => deleteCalisan(calisan.calisan_id); // Silme işlemi
+          actionCell.appendChild(deleteButton);
+        });
+      })
+      .catch(error => console.error('Veri çekme hatası:', error));
+  }
+
+  // Çalışanı güncellemek için işlev
+  function updateCalisan(calisanId) {
+    window.location.href = `calisanGuncelle.html?id=${calisanId}`;
+  }
+
+  // Çalışanı silmek için işlev
+  function deleteCalisan(calisanId) {
+    fetch("http://localhost:8090/DELETE/CalisanDelete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ calisan_id: calisanId })
+    })
+      .then(response => {
+        if (response.ok) {
+          alert("Çalışan başarıyla silindi!");
+          fetchCalisanlar(); // Listeyi güncelle
+        } else {
+          alert("Çalışan silinirken bir hata oluştu.");
+        }
+      })
+      .catch(error => console.error('Silme hatası:', error));
+  }
+
+  window.onload = fetchCalisanlar;
+</script>
+</body>
+</html>

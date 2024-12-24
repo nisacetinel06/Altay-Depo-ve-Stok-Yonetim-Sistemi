@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Siparişler</title>
+  <style>
+    /* Genel Sayfa Stil */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100%;
+        overflow-x: hidden;
+    }
+
+    h2 {
+        font-size: 36px;
+        color: #FF6F00;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    /* Tablo Tasarımı */
+    table {
+        width: 80%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    th {
+        background-color: #FF6F00;
+        color: white;
+        text-transform: uppercase;
+    }
+
+    td {
+        background-color: #f9f9f9;
+        color: #333;
+    }
+
+    tr:nth-child(even) td {
+        background-color: #f4f4f4;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+        cursor: pointer;
+    }
+
+    /* Butonlar */
+    button {
+        padding: 8px 15px;
+        background-color: #FF6F00;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #e65c00;
+    }
+
+    /* Detaylar gösterim kutusu */
+    #siparisDetaylari {
+        margin-top: 40px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 900px;
+        text-align: center;
+    }
+
+    #siparisDetaylari table {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    #siparisDetaylari th, #siparisDetaylari td {
+        padding: 10px;
+    }
+
+    /* Geri butonu */
+    .geriButonu {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background-color: #FF6F00;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .geriButonu:hover {
+        background-color: #e65c00;
+    }
+
+    /* Arka Plan ve Konteyner */
+    .container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Geri Butonu -->
+<a href="AnaSayfa.html" class="geriButonu">GERİ</a>
+
+<div class="container">
+  <h2>Siparişler</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>Sipariş ID</th>
+      <th>Sipariş Tarihi</th>
+      <th>Müşteri ID</th>
+      <th>Ödeme Durumu</th>
+      <th>Detaylar</th>
+    </tr>
+    </thead>
+    <tbody id="siparisTableBody">
+    <!-- Siparişler burada dinamik olarak yüklenecek -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // JavaScript ile Sipariş verilerini çekip tabloya ekleyelim
+  window.onload = function() {
+      fetch('http://localhost:8090/GET/SiparisGet')
+      .then(response => response.json())
+      .then(data => {
+          const tableBody = document.getElementById('siparisTableBody');
+          data.forEach(siparis => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                  <td>${siparis.siparis_id}</td>
+                  <td>${siparis.siparis_tarihi}</td>
+                  <td>${siparis.musteri_id}</td>
+                  <td>${siparis.odeme_durumu}</td>
+                  <td><button onclick="detaylariGoster(${siparis.siparis_id})">Detayları Gör</button></td>
+              `;
+              tableBody.appendChild(row);
+          });
+      })
+      .catch(error => console.error('Hata:', error));
+  };
+
+  function detaylariGoster(siparis_id) {
+    fetch(`http://localhost:8090/siparis_urun?id=${siparis_id}`) // Sipariş ürünlerini al
+    .then(response => response.json())
+    .then(data => {
+        let detaylarHtml = `
+            <h3>Sipariş Ürünleri</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ürün ID</th>
+                        <th>Ürün Adı</th>
+                        <th>Fiyat</th>
+                        <th>Miktar</th>
+                        <th>Toplam Tutar</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        data.forEach(urun => {
+            const toplamTutar = urun.fiyat * urun.miktar; // Fiyat ve miktarı çarparak toplam tutarı hesapla
+            detaylarHtml += `
+                <tr>
+                    <td>${urun.urun_id}</td>
+                    <td>${urun.urun_adi}</td>
+                    <td>${urun.fiyat.toFixed(2)} ₺</td>
+                    <td>${urun.miktar}</td>
+                    <td>${toplamTutar.toFixed(2)} ₺</td>
+                </tr>
+            `;
+        });
+
+        detaylarHtml += '</tbody></table>';
+
+        const detayDiv = document.getElementById('siparisDetaylari');
+        if (!detayDiv) {
+            const div = document.createElement('div');
+            div.id = 'siparisDetaylari';
+            div.innerHTML = detaylarHtml;
+            document.body.appendChild(div);
+        } else {
+            detayDiv.innerHTML = detaylarHtml;
+        }
+    })
+    .catch(error => console.error('Hata:', error));
+  }
+</script>
+
+</body>
+</html>

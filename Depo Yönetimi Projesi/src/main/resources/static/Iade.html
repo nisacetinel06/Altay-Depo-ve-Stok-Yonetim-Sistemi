@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>İade Nedenleri</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 700px;
+        width: 100%;
+        border-top: 5px solid #ff6f00; /* Turuncu üst şerit */
+    }
+
+    h1 {
+        text-align: center;
+        color: #ff6f00; /* Turuncu başlık */
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    table th, table td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    table th {
+        background-color: #ff6f00; /* Turuncu başlık */
+        color: white;
+        font-weight: bold;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: #f4f4f4; /* Açık gri */
+    }
+
+    .load-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background-color: #ff6f00; /* Turuncu buton */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .load-btn:hover {
+        background-color: #e65c00; /* Daha koyu turuncu */
+    }
+
+    .no-data {
+        text-align: center;
+        color: #666; /* Gri yazı */
+        font-style: italic;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>İade Nedenleri ve Sayıları</h1>
+  <table>
+    <thead>
+    <tr>
+      <th>İade Nedeni</th>
+      <th>İade Sayısı</th>
+    </tr>
+    </thead>
+    <tbody id="iade-table-body">
+    <!-- Dinamik veri burada görünecek -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // Verileri çekmek için kullanılan fonksiyon
+  function fetchIadeData() {
+      const apiUrl = "http://localhost:8090/GET/IadeGet";
+      const tableBody = document.getElementById("iade-table-body");
+
+      // Önce tabloyu temizleyelim
+      tableBody.innerHTML = "";
+
+      fetch(apiUrl)
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error("Veri çekilirken hata oluştu.");
+              }
+              return response.json();
+          })
+          .then(data => {
+              // Eğer veri varsa tabloya ekle
+              if (data.length > 0) {
+                  data.forEach(item => {
+                      const row = document.createElement("tr");
+
+                      const reasonCell = document.createElement("td");
+                      reasonCell.textContent = item.iade_nedeni;
+
+                      const countCell = document.createElement("td");
+                      countCell.textContent = item.iade_sayisi;
+
+                      row.appendChild(reasonCell);
+                      row.appendChild(countCell);
+                      tableBody.appendChild(row);
+                  });
+              } else {
+                  // Veri yoksa mesaj göster
+                  const noDataRow = document.createElement("tr");
+                  const noDataCell = document.createElement("td");
+                  noDataCell.textContent = "Kayıt bulunamadı.";
+                  noDataCell.colSpan = 2;
+                  noDataCell.style.textAlign = "center";
+                  noDataRow.appendChild(noDataCell);
+                  tableBody.appendChild(noDataRow);
+              }
+          })
+          .catch(error => {
+              console.error("Hata:", error);
+              alert("Veriler yüklenirken bir hata oluştu.");
+          });
+  }
+
+  // Sayfa yüklendiğinde verileri çekmek için fonksiyonu çağırıyoruz
+  window.onload = fetchIadeData;
+</script>
+</body>
+</html>

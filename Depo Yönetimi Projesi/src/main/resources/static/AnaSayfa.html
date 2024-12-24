@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ana Sayfa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+
+    header {
+      background-color: #ff6f00;
+      padding: 20px;
+      color: white;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 30px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+      width: 200px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .card i {
+      font-size: 40px;
+      color: #ff6f00;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #777;
+    }
+
+    footer {
+      text-align: center;
+      background-color: #ff6f00;
+      padding: 10px;
+      color: white;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Yönetim Paneli</h1>
+</header>
+
+<div class="container">
+  <!-- Çalışan işlemleri -->
+  <div class="card" onclick="location.href='CalisanEkle.html'">
+    <i class="fa fa-user-plus"></i>
+    <h3>Çalışan Ekle</h3>
+    <p>Yeni bir çalışan ekleyin.</p>
+  </div>
+
+  <div class="card" onclick="location.href='CalisanGuncelle.html'">
+    <i class="fa fa-user-edit"></i>
+    <h3>Çalışan Güncelle</h3>
+    <p>Var olan bir çalışanı güncelleyin.</p>
+  </div>
+
+  <div class="card" onclick="location.href='CalisanListe.html'">
+    <i class="fa fa-users"></i>
+    <h3>Çalışanlar</h3>
+    <p>Tüm çalışanları görüntüleyin.</p>
+  </div>
+
+  <!-- Ürün işlemleri -->
+  <div class="card" onclick="location.href='UrunEkle.html'">
+    <i class="fa fa-box"></i>
+    <h3>Ürün Ekle</h3>
+    <p>Yeni bir ürün ekleyin.</p>
+  </div>
+
+  <div class="card" onclick="location.href='UrunGuncelle.html'">
+    <i class="fa fa-edit"></i>
+    <h3>Ürün Güncelle</h3>
+    <p>Var olan ürünü güncelleyin.</p>
+  </div>
+
+  <div class="card" onclick="location.href='urunKategorisi.html'">
+    <i class="fa fa-list"></i>
+    <h3>Ürünler</h3>
+    <p>Tüm ürünleri görüntüleyin.</p>
+  </div>
+
+  <div class="card" onclick="location.href='KategoriyeGore.html'">
+    <i class="fa fa-filter"></i>
+    <h3>Kategoriye Göre Ürünler</h3>
+    <p>Ürünleri kategorilere göre filtreleyin.</p>
+  </div>
+
+  <!-- Sipariş işlemleri -->
+  <div class="card" onclick="location.href='SiparisEkle.html'">
+    <i class="fa fa-cart-plus"></i>
+    <h3>Sipariş Ekle</h3>
+    <p>Yeni bir sipariş oluşturun.</p>
+  </div>
+
+  <div class="card" onclick="location.href='SiparisTablosu.html'">
+    <i class="fa fa-cart-arrow-down"></i>
+    <h3>Siparişler</h3>
+    <p>Tüm siparişleri görüntüleyin.</p>
+  </div>
+
+  <div class="card" onclick="location.href='SiparisDetay.html'">
+    <i class="fa fa-info-circle"></i>
+    <h3>Sipariş Detayları</h3>
+    <p>Siparişlerin detaylarını görüntüleyin.</p>
+  </div>
+
+  <!-- İade işlemleri -->
+  <div class="card" onclick="location.href='Iade.html'">
+    <i class="fa fa-history"></i>
+    <h3>İade Raporu</h3>
+    <p>İade edilen ürünlerin raporunu görüntüleyin.</p>
+  </div>
+
+  <!-- Ödeme işlemleri -->
+  <div class="card" onclick="location.href='OdemeKaydı.html'">
+    <i class="fa fa-credit-card"></i>
+    <h3>Ödeme Kaydı</h3>
+    <p>Ödeme işlemleri kaydedin.</p>
+  </div>
+</div>
+
+
+
+</body>
+</html>

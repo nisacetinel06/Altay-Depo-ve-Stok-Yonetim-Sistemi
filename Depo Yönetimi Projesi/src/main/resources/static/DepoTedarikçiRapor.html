@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depo-Tedarikçi Raporu</title>
+    <style>
+        /* CSS KODLARI */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0; /* Gri tonunda arka plan */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #FF6F00; /* Turuncu renk */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #FF6F00; /* Turuncu arka plan */
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9; /* Beyaz-gri arası */
+        }
+
+        table tr:hover {
+            background-color: #e0e0e0; /* Gri tonlarında hover */
+            cursor: pointer;
+        }
+
+        table td {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<!-- HTML KODLARI -->
+<div class="container">
+    <h1>Depo-Tedarikçi Raporu</h1>
+    <table id="raporTable">
+        <thead>
+        <tr>
+            <th>Depo Adı</th>
+            <th>Tedarikçi Adı</th>
+            <th>Telefon</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Dinamik veriler buraya eklenecek -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // JavaScript KODLARI
+    document.addEventListener("DOMContentLoaded", function () {
+        const apiUrl = "http://localhost:8090/GET/DepoTedarikciRaporuGet"; // API URL'si
+        const tableBody = document.querySelector("#raporTable tbody");
+
+        // API'den verileri çek
+        fetch(apiUrl)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Veri alınırken bir hata oluştu!");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                // Gelen verileri tabloya ekle
+                data.forEach((item) => {
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${item.depo.depo_adi}</td>
+                        <td>${item.tedarikci.tedarikci_adi}</td>
+                        <td>${item.tedarikci.telefon}</td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch((error) => {
+                console.error("Hata:", error);
+                const errorRow = document.createElement("tr");
+                errorRow.innerHTML = `<td colspan="3">Veri alınamadı!</td>`;
+                tableBody.appendChild(errorRow);
+            });
+    });
+</script>
+
+</body>
+</html>

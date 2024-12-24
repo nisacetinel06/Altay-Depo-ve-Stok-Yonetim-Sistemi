@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ödeme Kaydı</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #FF6F00;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .logo {
+        width: 150px;
+        height: auto;
+        border-radius: 50%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border: 3px solid #FF4500;
+        object-fit: cover;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .login-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        width: 320px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+    .login-container h2 {
+        color: #FF4500;
+        font-size: 24px;
+        margin-top: 140px;
+        margin-bottom: 20px;
+    }
+    .login-container input[type="text"],
+    .login-container input[type="number"],
+    .login-container input[type="double"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin: 10px 0;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+    }
+    .login-container input[type="text"]:focus,
+    .login-container input[type="number"]:focus,
+    .login-container input[type="double"]:focus {
+        border-color: #FF4500;
+        outline: none;
+    }
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .button-container button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        background-color: #FF4500;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .button-container button:hover {
+        background-color: #FF6347;
+    }
+    .button-container a {
+        text-decoration: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        background-color: #A9A9A9;
+        color: black;
+    }
+    .button-container a:hover {
+        background-color: #888888;
+    }
+  </style>
+</head>
+<body>
+<div class="login-container">
+  <img src="altay.webp" alt="Logo" class="logo">
+  <h2>Ödeme Kaydı</h2>
+  <form id="odemeForm" method="POST">
+    <input type="number" id="odeme_id" name="odeme_id" placeholder="Ödeme ID" required>
+    <input type="number" id="miktar" name="miktar" placeholder="Miktar" required>
+    <input type="text" id="odeme_tarihi" name="odeme_tarihi" placeholder="Ödeme Tarihi" required>
+    <input type="text" id="odeme_tipi" name="odeme_tipi" placeholder="Ödeme Tipi" required>
+    <input type="number" id="siparis_id" name="siparis_id" placeholder="Sipariş ID" required>
+    <div class="button-container">
+      <a href="SiparisTablosu.html" class="back-button">Geri</a>
+      <button id="kaydetButonu" type="submit">Kaydet</button>
+    </div>
+  </form>
+</div>
+</body>
+</html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $('#odemeForm').on('submit', function (event) {
+      event.preventDefault();
+
+      let odeme = {
+          odeme_id: $("#odeme_id").val(),
+          miktar: $("#miktar").val(),
+          odeme_tarihi: $("#odeme_tarihi").val(),
+          odeme_tipi: $("#odeme_tipi").val(),
+          siparis_id: $("#siparis_id").val()
+      };
+
+      $.ajax({
+          url: "http://localhost:8090/POST/OdemePost",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify(odeme),
+          success: function (response, textStatus, xhr) {
+              console.log('Sunucu Yanıtı:', response);
+              if (xhr.status === 200) {
+                  alert(response.message);
+                  window.location.href = 'SiparisTablosu.html';
+              } else {
+                  alert("Bir hata oluştu, lütfen tekrar deneyin.");
+              }
+          },
+          error: function (xhr, status, error) {
+              console.error("Hata Detayları:", status, error);
+              alert("Ödeme kaydı yapılamadı. Lütfen tekrar deneyin.");
+          }
+      });
+  });
+</script>
